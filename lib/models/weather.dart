@@ -38,7 +38,7 @@ class Weather extends Equatable {
     );
   }
 
-  factory Weather.initial(Map<String, dynamic> json) {
+  factory Weather.initial() {
     return Weather(
       weatherStateName: '',
       weatherStateAbbr: '',

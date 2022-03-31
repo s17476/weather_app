@@ -62,7 +62,7 @@ class WeatherApiServices {
       final Map<String, dynamic> weatherJson = json.decode(response.body);
 
       final Weather weather = Weather.fromJson(weatherJson);
-      print(weather);
+      // print(weather);
 
       return weather;
     } catch (e) {

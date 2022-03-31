@@ -13,9 +13,9 @@ class WeatherRepository {
   Future<Weather> fetchWeather(String city) async {
     try {
       final int woeid = await weatherApiServices.getWoeid(city);
-      print(woeid);
+      // print(woeid);
       final Weather weather = await weatherApiServices.getWeather(woeid);
-      print(weather);
+      // print(weather);
       return weather;
     } on WeatherException catch (e) {
       throw CustomError(errMsg: e.message);
