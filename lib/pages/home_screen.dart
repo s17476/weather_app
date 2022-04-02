@@ -1,16 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:weather_app/blocs/settings/settings_bloc.dart';
+import 'package:weather_app/blocs/weather/weather_bloc.dart';
 import 'package:weather_app/constants/consatnts.dart';
-import 'package:weather_app/cubits/settings/settings_cubit.dart';
 import 'package:weather_app/pages/search_screen.dart';
 import 'package:weather_app/pages/settings_screen.dart';
-import 'package:weather_app/repositories/weather_repository.dart';
-import 'package:weather_app/services/weather_api_services.dart';
-import 'package:weather_app/widgets/error_dialog.dart';
 
-import '../cubits/weather/weather_cubit.dart';
+import 'package:weather_app/widgets/error_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -33,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // }
 
   String showTemperature(double temperature) {
-    final tempUnit = context.watch<SettingsCubit>().state.tempUnit;
+    final tempUnit = context.watch<SettingsBloc>().state.tempUnit;
 
     if (tempUnit == TempUnit.farenheit) {
       return '${((temperature * 9 / 5) + 32).toStringAsFixed(1)} ℉';
@@ -65,7 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ));
               if (_city != null) {
-                context.read<WeatherCubit>().fetchWeather(_city!);
+                context
+                    .read<WeatherBloc>()
+                    .add(FetchWeatherEvent(city: _city!));
               }
             },
             icon: const Icon(Icons.search),
@@ -82,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: BlocConsumer<WeatherCubit, WeatherState>(
+      body: BlocConsumer<WeatherBloc, WeatherState>(
         builder: (context, state) {
           if (state.status == WeatherStatus.initial) {
             return const Center(
