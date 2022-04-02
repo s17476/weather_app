@@ -34,20 +34,24 @@ class MyApp extends StatelessWidget {
             create: (context) => SettingsBloc(),
           ),
           BlocProvider<ThemeBloc>(
-            create: (context) =>
-                ThemeBloc(weatherBloc: context.read<WeatherBloc>()),
+            create: (context) => ThemeBloc(),
           )
         ],
-        child: BlocBuilder<ThemeBloc, ThemeState>(builder: (context, state) {
-          return MaterialApp(
-            title: 'Weather app',
-            debugShowCheckedModeBanner: false,
-            theme: state.appTheme == AppTheme.light
-                ? ThemeData.light()
-                : ThemeData.dark(),
-            home: const HomeScreen(),
-          );
-        }),
+        child: BlocListener<WeatherBloc, WeatherState>(
+          listener: (context, state) {
+            context.read<ThemeBloc>().setTheme(state.weather.theTemp);
+          },
+          child: BlocBuilder<ThemeBloc, ThemeState>(builder: (context, state) {
+            return MaterialApp(
+              title: 'Weather app',
+              debugShowCheckedModeBanner: false,
+              theme: state.appTheme == AppTheme.light
+                  ? ThemeData.light()
+                  : ThemeData.dark(),
+              home: const HomeScreen(),
+            );
+          }),
+        ),
       ),
     );
   }
